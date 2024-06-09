@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.34929.205
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopForum.API", "TopForum.API\TopForum.API.csproj", "{0F9ACC23-6085-401E-BA89-5230C7708CAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F9ACC23-6085-401E-BA89-5230C7708CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F9ACC23-6085-401E-BA89-5230C7708CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F9ACC23-6085-401E-BA89-5230C7708CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F9ACC23-6085-401E-BA89-5230C7708CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1556199D-F10F-4C15-A5B1-035D3CE05A58}
+	EndGlobalSection
+EndGlobal
