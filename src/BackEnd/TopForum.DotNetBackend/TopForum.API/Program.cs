@@ -16,29 +16,47 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+List<Topic> topics =
+[
+    new Topic(Guid.Parse("63b4696e-88f5-4411-bc9a-51343c73fa97"), "Cars", "This is for talking all about vehicles."),
+    new Topic(Guid.Parse("bc027c5f-5add-491e-878c-e322eea99baf"), "Coffee", "This is for conversations about The Liquid Stuff."),
+    new Topic(Guid.Parse("8dc8eda6-7dc8-4b9b-a9e6-fffbf5f025b4"), "Bikes", "Conversations about Biking, urban policy, and other stuff."),
+    new Topic(Guid.Parse("8dc8eda6-7dc8-4b9b-a9e6-fffbf5f025b4"), "Programming", "Software dev convo."),
+    new Topic(Guid.Parse("8dc8eda6-7dc8-4b9b-a9e6-fffbf5f025b4"), "Exercise", "Convo about exercise progress."),
+];
 
-app.MapGet("/weatherforecast", () =>
+// Get all subjects
+
+app.MapGet("/topics", () =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    app.Logger.LogInformation("Returning all topics");
+    return Results.Ok(topics);
 })
-.WithName("GetWeatherForecast")
+.WithName("GetTopics")
 .WithOpenApi();
+
+// Get a single subject
+
+app.MapGet("/topic/{topicId:guid}", (Guid topicId) =>
+{
+
+    app.Logger.LogInformation("Looking for topic {TopicId}", topicId);
+    foreach (Topic topic in topics)
+    {
+        if (topic.Id == topicId)
+        {
+            app.Logger.LogInformation("Found topic {TopicId}", topicId);
+            return Results.Ok(topic);
+        }
+    }
+
+    app.Logger.LogWarning("Not found topic {TopicId}", topicId);
+    return Results.NotFound();
+})
+.WithName("GetTopic")
+.WithOpenApi();
+
 
 app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+internal record Topic(Guid Id, string Name, string Description);
