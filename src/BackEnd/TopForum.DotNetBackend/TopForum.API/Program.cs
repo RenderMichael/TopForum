@@ -21,8 +21,8 @@ List<Topic> topics =
     new Topic(Guid.Parse("63b4696e-88f5-4411-bc9a-51343c73fa97"), "Cars", "This is for talking all about vehicles."),
     new Topic(Guid.Parse("bc027c5f-5add-491e-878c-e322eea99baf"), "Coffee", "This is for conversations about The Liquid Stuff."),
     new Topic(Guid.Parse("8dc8eda6-7dc8-4b9b-a9e6-fffbf5f025b4"), "Bikes", "Conversations about Biking, urban policy, and other stuff."),
-    new Topic(Guid.Parse("8dc8eda6-7dc8-4b9b-a9e6-fffbf5f025b4"), "Programming", "Software dev convo."),
-    new Topic(Guid.Parse("8dc8eda6-7dc8-4b9b-a9e6-fffbf5f025b4"), "Exercise", "Convo about exercise progress."),
+    new Topic(Guid.Parse("ec322b1b-1e2a-4a94-909c-bf94ed738e75"), "Programming", "Software dev convo."),
+    new Topic(Guid.Parse("575ced2a-cd43-41f5-b17d-001bbed5fb99"), "Exercise", "Convo about exercise progress."),
 ];
 
 // Get all subjects
