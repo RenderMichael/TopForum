@@ -37,45 +37,25 @@ app.MapGet("/topics", () =>
 
 // Get a single subject
 
-app.MapGet("/topic/{topicId:guid}", (Guid topicId) =>
+app.MapGet("/topic/{slug}", (string slug) =>
 {
-
-    app.Logger.LogInformation("Looking for topic {TopicId}", topicId);
+    app.Logger.LogInformation("Looking for topic {Slug}", slug);
     foreach (Topic topic in topics)
     {
-        if (topic.Id == topicId)
+        if (string.Equals(topic.Name, slug, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(topic.Id.ToString(), slug, StringComparison.OrdinalIgnoreCase))
         {
-            app.Logger.LogInformation("Found topic {TopicId}", topicId);
+            app.Logger.LogInformation("Found topic {Slug}", slug);
             return Results.Ok(topic);
         }
     }
 
-    app.Logger.LogWarning("Not found topic {TopicId}", topicId);
-    return Results.NotFound();
-})
-.WithName("GetTopicById")
-.WithOpenApi();
-
-
-app.MapGet("/topic/{topicName:alpha}", (string topicName) =>
-{
-
-    app.Logger.LogInformation("Looking for topic {TopicName}", topicName);
-    foreach (Topic topic in topics)
-    {
-        if (string.Equals(topic.Name, topicName, StringComparison.OrdinalIgnoreCase))
-        {
-            app.Logger.LogInformation("Found topic {TopicName}", topicName);
-            return Results.Ok(topic);
-        }
-    }
-
-    app.Logger.LogWarning("{TopicName} not found", topicName);
+    app.Logger.LogWarning("{Slug} not found", slug);
     return Results.NotFound();
 
 })
-.WithName("GetTopicByName")
-.WithDescription("Gets a topic by it's topic name (case-insensitive)")
+.WithName("GetTopicBySlug")
+.WithDescription("Gets a topic by it's topic name (case-insensitive) or ID")
 .WithOpenApi();
 
 
