@@ -53,7 +53,29 @@ app.MapGet("/topic/{topicId:guid}", (Guid topicId) =>
     app.Logger.LogWarning("Not found topic {TopicId}", topicId);
     return Results.NotFound();
 })
-.WithName("GetTopic")
+.WithName("GetTopicById")
+.WithOpenApi();
+
+
+app.MapGet("/topic/{topicName:alpha}", (string topicName) =>
+{
+
+    app.Logger.LogInformation("Looking for topic {TopicName}", topicName);
+    foreach (Topic topic in topics)
+    {
+        if (string.Equals(topic.Name, topicName, StringComparison.OrdinalIgnoreCase))
+        {
+            app.Logger.LogInformation("Found topic {TopicName}", topicName);
+            return Results.Ok(topic);
+        }
+    }
+
+    app.Logger.LogWarning("{TopicName} not found", topicName);
+    return Results.NotFound();
+
+})
+.WithName("GetTopicByName")
+.WithDescription("Gets a topic by it's topic name (case-insensitive)")
 .WithOpenApi();
 
 
