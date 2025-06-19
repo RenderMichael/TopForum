@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+
 using Microsoft.AspNetCore.Mvc;
+
 using MiniValidation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +44,7 @@ app.MapGet("/topic/{slug}", (string slug) =>
 
     Topic? ourTopic = TopicStorage.Instance.FindTopicbySlug(slug);
 
-    if(ourTopic == null)
+    if (ourTopic == null)
     {
         app.Logger.LogWarning("{Slug} not found", slug);
         return Results.NotFound();
@@ -58,15 +60,15 @@ app.MapGet("/topic/{slug}", (string slug) =>
 
 app.MapPost("/topic/{topicSlug}/thread", (string topicSlug, [FromBody] CreateThreadModel newThread) =>
 {
-    bool isValid = MiniValidator.TryValidate(newThread,out var errors);
-    if(!isValid)
+    bool isValid = MiniValidator.TryValidate(newThread, out var errors);
+    if (!isValid)
     {
         app.Logger.LogWarning("Bad Data in new Thread");
         return Results.BadRequest(errors);
     }
 
     Topic? ourTopic = TopicStorage.Instance.FindTopicbySlug(topicSlug);
-    if(ourTopic == null)
+    if (ourTopic == null)
     {
         app.Logger.LogWarning("{TopicSlug} not found", topicSlug);
         return Results.NotFound("Topic not found");
@@ -76,11 +78,40 @@ app.MapPost("/topic/{topicSlug}/thread", (string topicSlug, [FromBody] CreateThr
 
     ourTopic.Threads.Add(thread);
     app.Logger.LogInformation("Thread added to Topic");
-    return Results.Created((string?) null, thread);
+    return Results.Created((string?)null, thread);
 })
 .WithName("CreateThreadInTopicBySlug")
 .WithDescription("Creates a thread with the Title, Body and Author within a given topic found with slug")
 .WithOpenApi();
+
+// Get a single thread
+app.MapGet("/topic/{topicSlug}/thread/{threadSlug}", (string topicSlug, Guid threadId) =>
+{
+    app.Logger.LogInformation("Looking for topic {Slug}", topicSlug);
+
+    Topic? ourTopic = TopicStorage.Instance.FindTopicbySlug(topicSlug);
+
+    if (ourTopic == null)
+    {
+        app.Logger.LogWarning("Topic {Slug} not found", topicSlug);
+        return Results.NotFound();
+    }
+
+    app.Logger.LogInformation("Found topic {Slug}", topicSlug);
+
+    foreach (var thread in ourTopic.Threads)
+    {
+        if (thread.Id.Equals(threadId))
+        {
+            app.Logger.LogInformation("Found thread {ThreadSlug}", threadId);
+
+            return Results.Ok(thread);
+        }
+    }
+    app.Logger.LogWarning("Topic {TopicSlug} found but thread {ThreadSlug} not found", topicSlug, threadId);
+
+    return Results.NotFound($"Topic {topicSlug} found but thread {threadId} not found");
+});
 
 app.Run();
 
@@ -100,6 +131,7 @@ internal record CreateThreadModel(
 internal class TopicStorage
 {
     private List<Topic> topics =
+
     [
         new Topic(Guid.Parse("63b4696e-88f5-4411-bc9a-51343c73fa97"), "Cars", "This is for talking all about vehicles."),
         new Topic(Guid.Parse("bc027c5f-5add-491e-878c-e322eea99baf"), "Coffee", "This is for conversations about The Liquid Stuff."),
@@ -112,7 +144,7 @@ internal class TopicStorage
     {
     }
 
-    public static TopicStorage Instance{ get; } = new TopicStorage();
+    public static TopicStorage Instance { get; } = new TopicStorage();
 
     public IReadOnlyList<Topic> GetAllTopics()
     {
